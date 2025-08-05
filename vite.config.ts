@@ -18,52 +18,55 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: [
-          'icons/*.png',
+          'icons/icon-192x192.png',
+          'icons/icon-512x512.png',
+          'icons/icon-512x512-maskable.png',
           'apple-touch-icon.png',
           'favicon.ico',
         ],
         manifest: {
           id: '/',
+          scope: '/',
           name: 'Quiz de Djelfa',
           short_name: 'DjelfaQuiz',
           description: 'Un quiz interactif pour tester vos connaissances sur la région de Djelfa en Algérie.',
-          theme_color: '#f1f5f9',
-          background_color: '#f1f5f9',
           start_url: '/',
+          scope_extensions: ['https://djelfaquiz.web.app/'], // obligatoire pour TWA
           display: 'standalone',
           display_override: ['standalone', 'window-controls-overlay'],
           orientation: 'portrait',
-          iarc_rating_id: 'e10+', // exemple, à ajuster selon ton app
+          theme_color: '#f1f5f9',
+          background_color: '#f1f5f9',
           prefer_related_applications: false,
           icons: [
             {
-              src: '/icons/icon-192x192.png',
+              src: 'icons/icon-192x192.png',
               sizes: '192x192',
               type: 'image/png',
-              purpose: 'any'
+              purpose: 'any',
             },
             {
-              src: '/icons/icon-512x512.png',
+              src: 'icons/icon-512x512.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'any'
+              purpose: 'any',
             },
             {
-              src: '/icons/icon-512x512-maskable.png',
+              src: 'icons/icon-512x512-maskable.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'maskable'
+              purpose: 'maskable',
             }
           ],
           screenshots: [
             {
-              src: '/screenshots/screenshot1.png',
+              src: 'screenshots/screenshot1.png',
               type: 'image/png',
               sizes: '540x720',
               label: 'Accueil du quiz'
             },
             {
-              src: '/screenshots/screenshot2.png',
+              src: 'screenshots/screenshot2.png',
               type: 'image/png',
               sizes: '540x720',
               label: 'Question en cours'
@@ -84,7 +87,7 @@ export default defineConfig(({ mode }) => {
           navigateFallback: 'offline.html',
         },
         devOptions: {
-          enabled: true
+          enabled: true // ← à mettre sur false ou supprimer en production
         }
       })
     ]
