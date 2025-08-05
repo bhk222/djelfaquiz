@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hors ligne – Calculateur & Guide AT/MP</title>
+  <meta name="theme-color" content="#f1f5f9" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- ✅ Font + Tailwind (inline, pas de CDN requis dans offline) -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 500px;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      color: #475569;
+    }
+
+    button {
+      background-color: #0d9488;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #0f766e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📡 Vous êtes hors ligne</h1>
+    <p>Il semble que vous n'ayez pas de connexion Internet.<br />Veuillez vérifier votre réseau et réessayer.</p>
+    <button onclick="location.reload()">🔄 Recharger la page</button>
+  </div>
+</body>
+</html>
