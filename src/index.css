@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cairo font import */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+/* Custom styles for Arabic RTL */
+html {
+  direction: rtl;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  background-color: #fdf6e3;
+}

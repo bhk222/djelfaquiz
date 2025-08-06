@@ -2,29 +2,84 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#fdf6e3">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#4285F4">
   <meta name="description" content="اختبر معلوماتك عن ولاية الجلفة من خلال لعبة تعليمية ممتعة.">
   <title>اختبر معلوماتك عن الجلفة</title>
 
+  <!-- PWA Meta Tags -->
   <link rel="icon" href="/algeria-flag-icon.png" type="image/png">
-  <link rel="apple-touch-icon" href="/algeria-flag-icon.png" sizes="180x180">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" sizes="192x192">
   <link rel="manifest" href="/manifest.webmanifest">
 
+  <!-- Mobile App Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="لعبة الجلفة">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="DjelfaQuiz">
+  
+  <!-- Fullscreen Meta Tags -->
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles-android.css">
 
   <style>
-    body { font-family: 'Cairo', sans-serif; }
+    body { 
+      font-family: 'Open Sans', 'Segoe UI', Roboto, sans-serif !important; 
+    }
+    
+    /* Forcer Roboto pour tous les éléments */
+    * {
+      font-family: 'Roboto', 'Cairo', sans-serif !important;
+    }
+    
+    /* Forcer un arrière-plan blanc et texte noir pour tout */
+    .material-card {
+      background: #FFFFFF !important;
+      background-color: #FFFFFF !important;
+    }
+    
+    .material-card * {
+      color: #000000 !important;
+      background-color: transparent !important;
+      font-family: 'Roboto', 'Cairo', sans-serif !important;
+    }
+    
+    /* Boutons de réponse avec arrière-plan blanc */
+    .answer-card, button {
+      background: #FFFFFF !important;
+      background-color: #FFFFFF !important;
+      color: #000000 !important;
+      border: 2px solid #000000 !important;
+      font-family: 'Roboto', 'Cairo', sans-serif !important;
+    }
+    
+    /* Timer et texte d'en-tête */
+    .timer-circular, .headline5, .headline6, .body1 {
+      color: #000000 !important;
+      font-family: 'Roboto', 'Cairo', sans-serif !important;
+    }
+    
+    /* Titres avec Roboto */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Roboto', 'Cairo', sans-serif !important;
+      font-weight: 500 !important;
+    }
+    
+    /* Sélecteur de langue avec Roboto */
+    .language-selector button {
+      font-family: 'Roboto', 'Cairo', sans-serif !important;
+    }
   </style>
 </head>
-<body class="bg-[#fdf6e3]">
+<body>
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

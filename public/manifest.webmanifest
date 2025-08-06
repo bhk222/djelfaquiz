@@ -1,31 +1,78 @@
 {
-  "name": "لعبة الجلفة",
-  "short_name": "الجلفة",
-  "description": "اختبر معلوماتك عن ولاية الجلفة من خلال لعبة تعليمية ممتعة.",
-  "start_url": "/index.html",
+  "name": "Quiz de Djelfa",
+  "short_name": "DjelfaQuiz",
+  "description": "اختبر معلوماتك عن الجلفة",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#fdf6e3",
-  "theme_color": "#fdf6e3",
+  "theme_color": "#f1f5f9",
+  "orientation": "portrait",
   "dir": "rtl",
   "lang": "ar",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "categories": ["education", "games"],
   "icons": [
     {
-      "src": "/algeria-flag-icon.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/algeria-flag-icon.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["education", "quiz", "game"],
   "scope_extensions": [
     {
-      "origin": "/"
+      "origin": "https://djelfaquiz.web.app"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "بدء اختبار سهل",
+      "short_name": "سهل",
+      "description": "ابدأ اختبار بمستوى سهل",
+      "url": "/?difficulty=easy",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "بدء اختبار متوسط",
+      "short_name": "متوسط",
+      "description": "ابدأ اختبار بمستوى متوسط",
+      "url": "/?difficulty=medium",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "بدء اختبار صعب",
+      "short_name": "صعب",
+      "description": "ابدأ اختبار بمستوى صعب",
+      "url": "/?difficulty=hard",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

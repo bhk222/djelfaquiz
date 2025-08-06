@@ -1,116 +1,91 @@
-const CACHE_NAME = 'djelfa-quiz-cache-v17';
-const OFFLINE_URL = '/offline.html';
-const QUEUE_NAME = 'quiz-sync-queue';
+self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js');
 
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/index.js',
-  '/manifest.webmanifest',
-  '/algeria-flag-icon.png',
-  '/algeria-flag-waving.png',
-  OFFLINE_URL,
-  'https://cdn.tailwindcss.com',
-  'https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap'
-];
-
-// INSTALLATION
+// Installation : mise en cache initiale
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
-  );
   self.skipWaiting();
+  event.waitUntil(
+    caches.open('djelfa-cache-v1').then(cache =>
+      cache.addAll([
+        '/',
+        '/index.html',
+        '/manifest.webmanifest',
+        '/icons/icon-192.png',
+        '/icons/icon-512.png',
+      ])
+    )
+  );
 });
 
-// ACTIVATION
+// Activation
 self.addEventListener('activate', event => {
+  clients.claim();
+});
+
+// Interception des requêtes
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response =>
+      response || fetch(event.request)
+    )
+  );
+});
+
+// 🔁 Background Sync
+self.addEventListener('sync', event => {
+  if (event.tag === 'sync-quiz-progress') {
+    event.waitUntil(syncQuizProgress());
+  }
+});
+
+async function syncQuizProgress() {
+  try {
+    const offlineData = await localforage.getItem('offline-quiz');
+    if (offlineData) {
+      await fetch('/api/sync', {
+        method: 'POST',
+        body: JSON.stringify(offlineData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      await localforage.removeItem('offline-quiz');
+      console.log('[SW] Données synchronisées avec succès.');
+    }
+  } catch (err) {
+    console.error('[SW] Échec de la synchronisation :', err);
+  }
+}
+
+// 🔔 Notifications push
+self.addEventListener('push', event => {
+  const data = event.data?.json() || {};
+  const title = data.title || 'DjelfaQuiz';
+  const options = {
+    body: data.body || 'Nouvelle notification',
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    data: data.url || '/'
+  };
+
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        })
-      );
+    self.registration.showNotification(title, options)
+  );
+});
+
+// 📲 Clic sur notification
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then(clientList => {
+      const targetUrl = event.notification.data || '/';
+      for (const client of clientList) {
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
     })
   );
-  self.clients.claim();
 });
-
-// FETCH
-self.addEventListener('fetch', event => {
-  if (event.request.method === 'POST') {
-    event.respondWith(
-      fetch(event.request).catch(async () => {
-        if ('sync' in self.registration) {
-          const body = await event.request.clone().json();
-          await saveRequest(body);
-          await self.registration.sync.register('sync-quiz');
-        }
-        return new Response(JSON.stringify({ offline: true }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' }
-        });
-      })
-    );
-  } else if (event.request.method === 'GET') {
-    event.respondWith(
-      caches.match(event.request).then(cached => {
-        if (cached) return cached;
-        return fetch(event.request)
-          .then(res => {
-            if (res.status === 200) {
-              const resClone = res.clone();
-              caches.open(CACHE_NAME).then(cache => cache.put(event.request, resClone));
-            }
-            return res;
-          })
-          .catch(() => {
-            if (event.request.mode === 'navigate') return caches.match(OFFLINE_URL);
-            return new Response('Offline', { status: 503 });
-          });
-      })
-    );
-  }
-});
-
-// Sauvegarde POST offline
-async function saveRequest(data) {
-  const cache = await caches.open(QUEUE_NAME);
-  const id = Date.now();
-  const request = new Request(`/sync-queue/${id}`, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' }
-  });
-  await cache.put(request, new Response(JSON.stringify(data)));
-}
-
-// Sync
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-quiz') {
-    event.waitUntil(replayRequests());
-  }
-});
-
-// Replay des requêtes
-async function replayRequests() {
-  const cache = await caches.open(QUEUE_NAME);
-  const requests = await cache.keys();
-  for (const request of requests) {
-    const response = await cache.match(request);
-    const body = await response.json();
-
-    try {
-      const res = await fetch('/api/sync', {
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' }
-      });
-      if (res.ok) await cache.delete(request);
-    } catch (e) {
-      console.error('[SW] Sync échouée', e);
-    }
-  }
-}

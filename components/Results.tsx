@@ -1,63 +1,129 @@
 import React from 'react';
+import { Translations } from '../utils/translations';
 
 interface ResultsProps {
   score: number;
   totalQuestions: number;
   onRestart: () => void;
+  translations: Translations;
 }
 
-const Results: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart }) => {
+const Results: React.FC<ResultsProps> = ({ score, totalQuestions, onRestart, translations }) => {
   const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+  
   let message = '';
-  if (percentage < 30) {
-    message = "لا بأس، المعرفة رحلة مستمرة!";
-  } else if (percentage < 60) {
-    message = "نتيجة جيدة! استمر في استكشاف تاريخ الجلفة.";
-  } else if (percentage < 90) {
-    message = "عمل رائع! معلوماتك ممتازة.";
+  let emoji = '';
+  let resultClass = '';
+  
+  if (percentage >= 90) {
+    message = translations.excellent;
+    emoji = '🏆';
+    resultClass = 'result-excellent';
+  } else if (percentage >= 70) {
+    message = translations.good;
+    emoji = '🎉';
+    resultClass = 'result-good';
+  } else if (percentage >= 50) {
+    message = translations.average;
+    emoji = '👍';
+    resultClass = 'result-average';
   } else {
-    message = "مذهل! أنت حقًا خبير في تاريخ المنطقة!";
+    message = translations.needs_improvement;
+    emoji = '💪';
+    resultClass = 'result-needs-improvement';
   }
 
-  const strokeDashoffset = 283 - (283 * percentage) / 100;
-
   return (
-    <div className="text-center bg-[#fdf6e3] p-8 rounded-lg shadow-2xl border-4 border-amber-800/20">
-      <h2 className="text-4xl font-bold text-[#5c4033] mb-6" style={{ textShadow: '1px 1px #d4c6a8' }}>
-        اكتملت الرحلة!
-      </h2>
+    <div className="results-container">
+      {/* Celebration Animation */}
+      <div className="celebration-area">
+        <div className="celebration-emoji">{emoji}</div>
+        <div className="floating-particles">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`particle particle-${i + 1}`}>✨</div>
+          ))}
+        </div>
+      </div>
       
-      <div className="relative w-48 h-48 mx-auto mb-6">
-        <svg className="w-full h-full" viewBox="0 0 100 100">
-          <circle className="text-amber-200" strokeWidth="10" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" />
-          <circle 
-             className="text-[#c95b2c]"
-             strokeWidth="10" 
-             strokeDasharray="283"
-             strokeDashoffset={strokeDashoffset}
-             strokeLinecap="round" 
-             stroke="currentColor" 
-             fill="transparent" 
-             r="45" 
-             cx="50" 
-             cy="50" 
-             style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%', transition: 'stroke-dashoffset 0.8s ease-out' }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-4xl font-bold text-[#5c4033]">{percentage}%</span>
-            <span className="text-lg text-[#6f4f28]">{score} / {totalQuestions}</span>
+      {/* Score Circle */}
+      <div className={`score-circle-container ${resultClass}`}>
+        <div className="score-circle">
+          <div className="score-ring">
+            <svg className="progress-ring" width="200" height="200">
+              <circle
+                className="progress-ring-bg"
+                cx="100"
+                cy="100"
+                r="85"
+              />
+              <circle
+                className="progress-ring-fill"
+                cx="100"
+                cy="100"
+                r="85"
+                strokeDasharray={534.07}
+                strokeDashoffset={534.07 * (1 - percentage / 100)}
+              />
+            </svg>
+            <div className="score-content">
+              <div className="score-percentage">{percentage}%</div>
+              <div className="score-text">{score}/{totalQuestions}</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <p className="text-xl text-[#6f4f28] mb-8">{message}</p>
+      {/* Result Message */}
+      <div className="result-message-container">
+        <h2 className="result-title">{translations.finalScore}</h2>
+        <p className={`result-message ${resultClass}`}>{message}</p>
+      </div>
       
-      <button
-        onClick={onRestart}
-        className="bg-[#c95b2c] hover:bg-[#a94a20] text-white font-bold py-3 px-10 rounded-md text-xl transition-all duration-300 transform hover:scale-105 shadow-lg border-b-4 border-[#893b1a]"
-      >
-        ابدأ رحلة جديدة
-      </button>
+      {/* Action Buttons */}
+      <div className="action-buttons">
+        <button
+          onClick={onRestart}
+          className="primary-action-btn"
+        >
+          <span className="btn-icon">🔄</span>
+          <span className="btn-text">{translations.playAgain}</span>
+        </button>
+        
+        <button
+          onClick={() => window.location.href = '#'}
+          className="secondary-action-btn"
+        >
+          <span className="btn-icon">🔍</span>
+          <span className="btn-text">{translations.discoverMore}</span>
+        </button>
+      </div>
+
+      {/* Performance Insights */}
+      <div className="performance-insights">
+        <div className="insight-card">
+          <div className="insight-icon">📊</div>
+          <div className="insight-content">
+            <div className="insight-label">Score</div>
+            <div className="insight-value">{percentage}%</div>
+          </div>
+        </div>
+        
+        <div className="insight-card">
+          <div className="insight-icon">✅</div>
+          <div className="insight-content">
+            <div className="insight-label">Correctes</div>
+            <div className="insight-value">{score}</div>
+          </div>
+        </div>
+        
+        <div className="insight-card">
+          <div className="insight-icon">❌</div>
+          <div className="insight-content">
+            <div className="insight-label">Incorrectes</div>
+            <div className="insight-value">{totalQuestions - score}</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

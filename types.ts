@@ -1,6 +1,7 @@
 
 export interface Answer {
   text: string;
+  textFr?: string;
   correct: boolean;
 }
 
@@ -12,6 +13,7 @@ export enum Difficulty {
 
 export interface Question {
   questionText: string;
+  questionTextFr?: string;
   answers: Answer[];
   difficulty: Difficulty;
 }
